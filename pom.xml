@@ -7,6 +7,16 @@
     <version>1.0</version>
     <name>hello</name>
     <url>https://github.com/boxfuse/boxfuse-sample-java-war-hello</url>
+         
+         
+         <properties>
+		<docker.image.prefix>kammana</docker.image.prefix>
+		<sonar.host.url>http://13.234.232.175:9000/</sonar.host.url>
+		<java.version>11</java.version>
+                <maven.compiler.source>${java.version}</maven.compiler.source>
+                <maven.compiler.target>${java.version}</maven.compiler.target>
+
+	</properties>
     <dependencies>
         <dependency>
             <groupId>javax.servlet</groupId>
