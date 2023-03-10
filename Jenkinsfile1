@@ -1,0 +1,36 @@
+pipeline {
+      agent any
+      
+      stages{
+            stage("GIT checkout"){
+            steps{
+                 git 'https://github.com/RAJANI9/boxfuse-sample-java-war-hello.git'
+              }
+            }
+            stage("build"){
+                  steps{
+                       sh "mvn clean package"
+                       sh "mv target/*.war target/boxfuse-sample-java-war-hello.war"
+                      }
+                       
+            }
+             stage("depoly"){
+                  steps{
+                     
+                       
+                       sshagent(['New']) {
+                       
+                       sh """
+                            scp -o StrictHostKeyChecking=no  target/boxfuse-sample-java-war-hello.war ec2-user@18.191.134.13:/home/ec2-user/apache-tomcat-9.0.73/webapps/
+                            
+                            ssh ec2-user@18.191.134.13 /home/ec2-user/apache-tomcat-9.0.73/bin/shutdown.sh
+                            ssh ec2-user@18.191.134.13 /home/ec2-user/apache-tomcat-9.0.73/bin/startup.sh
+                            
+                          """
+    
+}
+                      
+                       }
+            }
+       }
+  }     
