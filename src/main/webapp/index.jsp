@@ -55,7 +55,7 @@
     </style>
 </head>
 <body>
-    <h1>Welcome to Rajinikanth cloud  DevOps Kitchen!</h1>
+    <h1>Welcome to Rajinikanth Cloud -jenkins DevOps Kitchen!</h1>
     <h2>Menu</h2>
 
     <div id="menu">
