@@ -1,24 +1,32 @@
-pipeline {
-    agent any
+node {
+    // Environment or variables can be set here
+    def appWar = 'boxfuse-sample-java-war-hello.war'
 
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Building..'
-                // Add build commands here
+    try {
+        // Stage: GIT checkout
+        stage('GIT checkout') {
+            git 'https://github.com/RAJANI9/boxfuse-sample-java-war-hello.git'
+        }
+
+        // Stage: Build
+        stage('build') {
+            sh 'mvn clean package'
+            sh "mv target/*.war target/${appWar}"
+        }
+
+        // Stage: Deploy
+        stage('deploy') {
+            sshagent(['TOMCAT']) {
+                sh """
+                    scp -o StrictHostKeyChecking=no target/${appWar} ubuntu@43.205.136.127:/home/ubuntu/apache-tomcat-9.0.87/webapps/
+                    
+                    ssh ubuntu@43.205.136.127 /home/ubuntu/apache-tomcat-9.0.87/bin/shutdown.sh
+                    ssh ubuntu@43.205.136.127 /home/ubuntu/apache-tomcat-9.0.87/bin/startup.sh
+                   """
             }
         }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-                // Add test commands here
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying..'
-                // Add deploy commands here
-            }
-        }
+    } catch (Exception err) {
+        // Error handling
+        throw err // Rethrow the error to fail the build
     }
 }
